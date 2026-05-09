@@ -19,12 +19,6 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 
-const fs = require("fs");
-
-if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
-}
-
 app.get("/", (req, res) => {
   res.send("API Marketplace funcionando");
 });
