@@ -9,11 +9,11 @@ export async function registerUser(userData) {
     body: JSON.stringify(userData),
   });
 
-  const data = await response.json();
-
+  //const data = await response.json();
+  const text = await response.text();
+  console.log("RESPUESTA BACKEND:", text);
   if (!response.ok) {
     throw new Error(data.message || "Error al registrar usuario");
-    console.log("API_URL:", API_URL);
   }
 
   return data;
