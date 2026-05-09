@@ -1,6 +1,6 @@
 import { getAuthHeaders } from "./authService";
 
-const API_URL = "http://localhost:3000/api";
+const API_URL = "import.meta.env.VITE_API_URL";
 
 export async function getAdminUsers() {
   const response = await fetch(`${API_URL}/admin/users`, {
