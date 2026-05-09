@@ -13,6 +13,7 @@ export async function registerUser(userData) {
 
   if (!response.ok) {
     throw new Error(data.message || "Error al registrar usuario");
+    console.log("API_URL:", API_URL);
   }
 
   return data;
