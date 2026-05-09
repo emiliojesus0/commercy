@@ -9,9 +9,7 @@ export async function registerUser(userData) {
     body: JSON.stringify(userData),
   });
 
-  //const data = await response.json();
-  const text = await response.text();
-  console.log("RESPUESTA BACKEND:", text);
+  const data = await response.json();
   if (!response.ok) {
     throw new Error(data.message || "Error al registrar usuario");
   }
