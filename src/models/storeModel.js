@@ -35,3 +35,23 @@ exports.getStoreBySlugExact = (slug, callback) => {
 
   db.query(sql, [slug], callback);
 };
+
+exports.getStoreBySlugExactExcludingId = (slug, storeId, callback) => {
+  const sql = "SELECT * FROM tiendas WHERE slug = ? AND id <> ?";
+
+  db.query(sql, [slug, storeId], callback);
+};
+
+exports.updateStore = (store, callback) => {
+  const sql = `
+    UPDATE tiendas
+    SET nombre = ?, slug = ?, descripcion = ?
+    WHERE id = ? AND usuario_id = ?
+  `;
+
+  db.query(
+    sql,
+    [store.nombre, store.slug, store.descripcion, store.id, store.usuario_id],
+    callback,
+  );
+};

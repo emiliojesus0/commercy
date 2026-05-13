@@ -31,10 +31,11 @@ function DashboardPage() {
   return (
     <section>
       <h2>Panel del vendedor</h2>
+
       {!userActivo && (
         <p className="message-error">
-          Tu cuenta esta pendiente de activacion por un administrador. Cuando
-          seas aprobado, podras crear tu tienda y publicar productos.
+          Tu cuenta está pendiente de activación por un administrador. Cuando
+          seas aprobado, podrás crear tu tienda y publicar productos.
         </p>
       )}
 
@@ -43,28 +44,34 @@ function DashboardPage() {
           <article>
             <h3>{store.nombre}</h3>
             <p>{store.descripcion || "Sin descripción"}</p>
-            <Link to={`/store/${store.slug}`}>Ver mi tienda publica</Link>
+            <Link to={`/store/${store.slug}`}>Ver mi tienda pública</Link>
           </article>
 
           {userActivo && (
             <div className="dashboard-actions">
               <Link to="/create-product" className="dashboard-link">
-                Crear producto
+                Gestionar productos
               </Link>
               <Link to="/orders" className="dashboard-link">
-                Ver pedidos
+                Gestionar pedidos
+              </Link>
+              <Link to="/account" className="dashboard-link">
+                Mi cuenta y tienda
               </Link>
             </div>
           )}
         </>
       ) : (
         <>
-          <p>{error || "Todavia no tienes una tienda creada."}</p>
+          <p>{error || "Todavía no tienes una tienda creada."}</p>
 
           {userActivo && (
             <div className="dashboard-actions">
               <Link to="/create-store" className="dashboard-link">
                 Crear mi tienda
+              </Link>
+              <Link to="/account" className="dashboard-link">
+                Mi cuenta
               </Link>
             </div>
           )}

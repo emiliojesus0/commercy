@@ -19,12 +19,25 @@ exports.findUserByEmail = (email, callback) => {
   db.query(sql, [email], callback);
 };
 
+exports.findUserById = (userId, callback) => {
+  const sql = "SELECT id, nombre, email, rol, activo FROM usuarios WHERE id = ?";
+
+  db.query(sql, [userId], callback);
+};
+
+exports.findUserAuthById = (userId, callback) => {
+  const sql = "SELECT * FROM usuarios WHERE id = ?";
+
+  db.query(sql, [userId], callback);
+};
+
 exports.getVendedores = (callback) => {
   const sql = `
-    SELECT id, nombre, email, rol, activo
-    FROM usuarios
-    WHERE rol = 'vendedor'
-    ORDER BY id DESC
+    SELECT u.id, u.nombre, u.email, u.rol, u.activo, t.nombre AS tienda_nombre
+    FROM usuarios u
+    LEFT JOIN tiendas t ON t.usuario_id = u.id
+    WHERE u.rol = 'vendedor'
+    ORDER BY u.id DESC
   `;
 
   db.query(sql, callback);
@@ -48,4 +61,24 @@ exports.desactivarVendedor = (userId, callback) => {
   `;
 
   db.query(sql, [userId], callback);
+};
+
+exports.updateUserProfile = (user, callback) => {
+  const sql = `
+    UPDATE usuarios
+    SET nombre = ?
+    WHERE id = ?
+  `;
+
+  db.query(sql, [user.nombre, user.id], callback);
+};
+
+exports.updateUserPassword = (user, callback) => {
+  const sql = `
+    UPDATE usuarios
+    SET password = ?
+    WHERE id = ?
+  `;
+
+  db.query(sql, [user.password, user.id], callback);
 };

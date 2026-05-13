@@ -5,9 +5,19 @@ import {
   updateMyStoreOrderStatus,
 } from "../services/orderService";
 
+function formatDateTime(value) {
+  if (!value) {
+    return "Sin fecha";
+  }
+
+  return new Date(value).toLocaleString("es-EC", {
+    dateStyle: "full",
+    timeStyle: "short",
+  });
+}
+
 function OrderDetailPage() {
   const { orderId } = useParams();
-
   const [tienda, setTienda] = useState(null);
   const [pedido, setPedido] = useState(null);
   const [detalle, setDetalle] = useState([]);
@@ -35,6 +45,26 @@ function OrderDetailPage() {
     fetchOrderDetail();
   }, [orderId]);
 
+  const handleUpdateStatus = async (event) => {
+    event.preventDefault();
+    setMensajeEstado("");
+    setError("");
+
+    try {
+      setActualizandoEstado(true);
+      await updateMyStoreOrderStatus(orderId, nuevoEstado);
+      setPedido((prev) => ({
+        ...prev,
+        estado: nuevoEstado,
+      }));
+      setMensajeEstado("Estado actualizado correctamente.");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setActualizandoEstado(false);
+    }
+  };
+
   if (loading) {
     return <p>Cargando detalle del pedido...</p>;
   }
@@ -42,29 +72,6 @@ function OrderDetailPage() {
   if (error) {
     return <p>{error}</p>;
   }
-  const handleUpdateStatus = async (event) => {
-    event.preventDefault();
-
-    setMensajeEstado("");
-    setError("");
-
-    try {
-      setActualizandoEstado(true);
-
-      await updateMyStoreOrderStatus(orderId, nuevoEstado);
-
-      setPedido((prev) => ({
-        ...prev,
-        estado: nuevoEstado,
-      }));
-
-      setMensajeEstado("Estado actualizado correctamente");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setActualizandoEstado(false);
-    }
-  };
 
   return (
     <section>
@@ -85,7 +92,9 @@ function OrderDetailPage() {
           <p>Dirección: {pedido.direccion}</p>
           <p>Notas: {pedido.notas || "Sin notas"}</p>
           <p>Estado: {pedido.estado}</p>
-          <p>Total: ${pedido.total}</p>
+          <p>Total: ${Number(pedido.total).toFixed(2)}</p>
+          <p>Fecha del pedido: {formatDateTime(pedido.created_at)}</p>
+
           <form onSubmit={handleUpdateStatus}>
             <div>
               <label htmlFor="estado">Actualizar estado</label>
@@ -105,25 +114,40 @@ function OrderDetailPage() {
               {actualizandoEstado ? "Actualizando..." : "Actualizar estado"}
             </button>
           </form>
-          {mensajeEstado && <p>{mensajeEstado}</p>}
+
+          {mensajeEstado && (
+            <p className="message-success">{mensajeEstado}</p>
+          )}
         </article>
       )}
 
-      <section>
+      <section className="table-section">
         <h3>Productos del pedido</h3>
 
         {detalle.length === 0 ? (
           <p>No hay productos en este pedido.</p>
         ) : (
-          <div>
-            {detalle.map((item) => (
-              <article key={item.id}>
-                <h4>{item.titulo}</h4>
-                <p>Cantidad: {item.cantidad}</p>
-                <p>Precio unitario: ${item.precio_unitario}</p>
-                <p>Subtotal: ${item.subtotal}</p>
-              </article>
-            ))}
+          <div className="table-wrapper">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio unitario</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {detalle.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.titulo}</td>
+                    <td>{item.cantidad}</td>
+                    <td>${Number(item.precio_unitario).toFixed(2)}</td>
+                    <td>${Number(item.subtotal).toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </section>

@@ -12,6 +12,12 @@ router.post(
   isActiveSeller,
   storeController.createStore,
 );
+router.patch(
+  "/my/store",
+  authMiddleware.verifyToken,
+  isActiveSeller,
+  storeController.updateMyStore,
+);
 
 router.post("/:slug/orders", orderController.createOrder);
 router.get("/my/store", authMiddleware.verifyToken, storeController.getMyStore);

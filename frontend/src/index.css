@@ -254,6 +254,23 @@ article h4 {
   background-color: #1f2937;
 }
 
+.secondary-button {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.secondary-button:hover {
+  background-color: #d1d5db;
+}
+
+.danger-button {
+  background-color: #b91c1c;
+}
+
+.danger-button:hover {
+  background-color: #991b1b;
+}
+
 .message-success {
   margin-top: 14px;
   padding: 12px 14px;
@@ -368,6 +385,67 @@ article h4 {
   margin-top: 20px;
 }
 
+.table-section {
+  margin-top: 32px;
+}
+
+.table-wrapper {
+  margin-top: 16px;
+  overflow-x: auto;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th {
+  background-color: #f8fafc;
+  color: #111827;
+  font-size: 0.95rem;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.table-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.table-actions button {
+  padding: 10px 12px;
+}
+
+.table-thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
 input:disabled,
 textarea:disabled,
 select:disabled {
@@ -402,4 +480,11 @@ button:disabled {
   border-radius: 10px;
   background-color: white;
   padding: 4px;
+}
+
+@media (max-width: 640px) {
+  .data-table th,
+  .data-table td {
+    min-width: 140px;
+  }
 }

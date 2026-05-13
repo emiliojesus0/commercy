@@ -10,12 +10,14 @@ export async function registerUser(userData) {
   });
 
   const data = await response.json();
+
   if (!response.ok) {
     throw new Error(data.message || "Error al registrar usuario");
   }
 
   return data;
 }
+
 export async function loginUser(userData) {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
@@ -59,4 +61,51 @@ export function getUserRole() {
 
 export function getUserActivo() {
   return localStorage.getItem("userActivo");
+}
+
+export async function getMyProfile() {
+  const response = await fetch(`${API_URL}/users/me`, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Error al obtener la cuenta");
+  }
+
+  return data;
+}
+
+export async function updateMyProfile(profileData) {
+  const response = await fetch(`${API_URL}/users/me`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(profileData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Error al actualizar la cuenta");
+  }
+
+  return data;
+}
+
+export async function updateMyPassword(passwordData) {
+  const response = await fetch(`${API_URL}/users/me/password`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(passwordData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Error al actualizar la contraseña");
+  }
+
+  return data;
 }

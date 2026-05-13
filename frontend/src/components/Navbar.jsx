@@ -94,7 +94,7 @@ function Navbar() {
 
             {userActivo && (
               <li>
-                <Link to="/create-product">Crear producto</Link>
+                <Link to="/create-product">Productos</Link>
               </li>
             )}
 
@@ -113,6 +113,10 @@ function Navbar() {
             {storeName && (
               <li className="nav-store-name">Tienda: {storeName}</li>
             )}
+
+            <li>
+              <Link to="/account">Mi cuenta</Link>
+            </li>
 
             <li>
               <button type="button" onClick={handleLogout}>

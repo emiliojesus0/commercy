@@ -18,6 +18,22 @@ export async function createStore(storeData) {
   return data;
 }
 
+export async function updateMyStore(storeData) {
+  const response = await fetch(`${API_URL}/stores/my/store`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(storeData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Error al actualizar la tienda");
+  }
+
+  return data;
+}
+
 export async function getStoreBySlug(slug) {
   const response = await fetch(`${API_URL}/stores/${slug}`);
 

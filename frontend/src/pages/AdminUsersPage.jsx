@@ -37,7 +37,7 @@ function AdminUsersPage() {
     try {
       const data = await activateUser(userId);
       setMessage(data.message);
-      fetchUsers();
+      await fetchUsers();
     } catch (err) {
       setError(err.message);
     }
@@ -50,7 +50,7 @@ function AdminUsersPage() {
     try {
       const data = await deactivateUser(userId);
       setMessage(data.message);
-      fetchUsers();
+      await fetchUsers();
     } catch (err) {
       setError(err.message);
     }
@@ -70,30 +70,48 @@ function AdminUsersPage() {
       {users.length === 0 ? (
         <p>No hay vendedores registrados.</p>
       ) : (
-        <div className="admin-users-list">
-          {users.map((user) => (
-            <article key={user.id}>
-              <h3>{user.nombre}</h3>
-              <p>Email: {user.email}</p>
-              <p>Rol: {user.rol}</p>
-              <p>Estado: {user.activo ? "Activo" : "Inactivo"}</p>
-
-              <div className="dashboard-actions">
-                {!user.activo ? (
-                  <button type="button" onClick={() => handleActivate(user.id)}>
-                    Activar
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => handleDeactivate(user.id)}
-                  >
-                    Desactivar
-                  </button>
-                )}
-              </div>
-            </article>
-          ))}
+        <div className="table-wrapper">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Tienda</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.nombre}</td>
+                  <td>{user.email}</td>
+                  <td>{user.rol}</td>
+                  <td>{user.tienda_nombre || "Sin tienda"}</td>
+                  <td>{user.activo ? "Activo" : "Inactivo"}</td>
+                  <td className="table-actions">
+                    {!user.activo ? (
+                      <button
+                        type="button"
+                        onClick={() => handleActivate(user.id)}
+                      >
+                        Activar
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="danger-button"
+                        onClick={() => handleDeactivate(user.id)}
+                      >
+                        Desactivar
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </section>

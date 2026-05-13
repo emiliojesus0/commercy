@@ -2,6 +2,17 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getMyStoreOrders } from "../services/orderService";
 
+function formatDateTime(value) {
+  if (!value) {
+    return "Sin fecha";
+  }
+
+  return new Date(value).toLocaleString("es-EC", {
+    dateStyle: "short",
+    timeStyle: "short",
+  });
+}
+
 function OrdersPage() {
   const [tienda, setTienda] = useState(null);
   const [pedidos, setPedidos] = useState([]);
@@ -45,18 +56,37 @@ function OrdersPage() {
       {pedidos.length === 0 ? (
         <p>No hay pedidos todavía.</p>
       ) : (
-        <div>
-          {pedidos.map((pedido) => (
-            <article key={pedido.id}>
-              <h3>Pedido #{pedido.id}</h3>
-              <p>Cliente: {pedido.cliente_nombre}</p>
-              <p>Teléfono: {pedido.cliente_telefono}</p>
-              <p>Dirección: {pedido.direccion}</p>
-              <p>Estado: {pedido.estado}</p>
-              <p>Total: ${pedido.total}</p>
-              <Link to={`/orders/${pedido.id}`}>Ver detalle</Link>
-            </article>
-          ))}
+        <div className="table-wrapper">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Estado</th>
+                <th>Total</th>
+                <th>Fecha</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pedidos.map((pedido) => (
+                <tr key={pedido.id}>
+                  <td>#{pedido.id}</td>
+                  <td>{pedido.cliente_nombre}</td>
+                  <td>{pedido.cliente_telefono}</td>
+                  <td>{pedido.direccion}</td>
+                  <td>{pedido.estado}</td>
+                  <td>${Number(pedido.total).toFixed(2)}</td>
+                  <td>{formatDateTime(pedido.created_at)}</td>
+                  <td>
+                    <Link to={`/orders/${pedido.id}`}>Ver detalle</Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </section>
