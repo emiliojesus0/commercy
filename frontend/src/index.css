@@ -380,3 +380,26 @@ button:disabled {
   background-color: #9ca3af;
   cursor: not-allowed;
 }
+
+.nav-brand {
+  margin-right: auto;
+}
+
+.nav-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.nav-logo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  border-radius: 10px;
+  background-color: white;
+  padding: 4px;
+}

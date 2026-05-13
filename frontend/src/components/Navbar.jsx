@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import {
   getToken,
   getUserActivo,
@@ -11,6 +12,7 @@ import { getMyStore } from "../services/storeService";
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [storeName, setStoreName] = useState("");
 
@@ -22,6 +24,8 @@ function Navbar() {
     (acc, item) => acc + item.cantidad,
     0,
   );
+  const showCartLink = !token && location.pathname.startsWith("/store/");
+  const isPublicStoreView = !token && location.pathname.startsWith("/store/");
 
   useEffect(() => {
     const fetchStore = async () => {
@@ -49,21 +53,32 @@ function Navbar() {
   return (
     <nav>
       <ul>
-        <li>
-          <Link to="/">Inicio</Link>
+        <li className="nav-brand">
+          <Link to="/" className="nav-brand-link">
+            <img src="/favicon.png" alt="Commercy" className="nav-logo" />
+            <span>Commercy</span>
+          </Link>
         </li>
-        <li>
-          <Link to="/cart">Carrito ({totalCartItems})</Link>
-        </li>
+
+        {showCartLink && (
+          <li>
+            <Link to="/cart">Carrito ({totalCartItems})</Link>
+          </li>
+        )}
 
         {!token ? (
           <>
             <li>
-              <Link to="/login">Login</Link>
+              <Link to="/login">
+                {isPublicStoreView ? "Acceso vendedores" : "Login"}
+              </Link>
             </li>
-            <li>
-              <Link to="/register">Registro</Link>
-            </li>
+
+            {!isPublicStoreView && (
+              <li>
+                <Link to="/register">Registro</Link>
+              </li>
+            )}
           </>
         ) : (
           <>
@@ -101,7 +116,7 @@ function Navbar() {
 
             <li>
               <button type="button" onClick={handleLogout}>
-                Cerrar sesion
+                Cerrar sesión
               </button>
             </li>
           </>

@@ -14,7 +14,7 @@ exports.createOrder = (req, res) => {
 
   if (!cliente_nombre || !cliente_telefono || !direccion) {
     return res.status(400).json({
-      message: "Nombre, telefono y direccion son obligatorios",
+      message: "Nombre, teléfono y dirección son obligatorios",
     });
   }
 
@@ -44,7 +44,7 @@ exports.createOrder = (req, res) => {
     orderModel.beginTransaction((transactionErr, connection) => {
       if (transactionErr) {
         return res.status(500).json({
-          message: "Error al iniciar la transaccion del pedido",
+          message: "Error al iniciar la transacción del pedido",
         });
       }
 
@@ -147,7 +147,7 @@ exports.createOrder = (req, res) => {
         ) {
           return rollbackWithError(
             400,
-            "Los productos enviados no son validos",
+            "Los productos enviados no son válidos",
           );
         }
 

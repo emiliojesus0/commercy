@@ -42,7 +42,7 @@ function DashboardPage() {
         <>
           <article>
             <h3>{store.nombre}</h3>
-            <p>{store.descripcion || "Sin descripcion"}</p>
+            <p>{store.descripcion || "Sin descripción"}</p>
             <Link to={`/store/${store.slug}`}>Ver mi tienda publica</Link>
           </article>
 

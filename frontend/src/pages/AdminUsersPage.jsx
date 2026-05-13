@@ -62,7 +62,7 @@ function AdminUsersPage() {
 
   return (
     <section>
-      <h2>Gestion de vendedores</h2>
+      <h2>Gestión de vendedores</h2>
 
       {message && <p className="message-success">{message}</p>}
       {error && <p className="message-error">{error}</p>}

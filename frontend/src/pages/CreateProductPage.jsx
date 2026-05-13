@@ -20,7 +20,7 @@ function CreateProductPage() {
     setMensaje("");
     setError("");
     if (!userActivo) {
-      setError("Tu cuenta esta inactiva y no puede realizar esta accion");
+      setError("Tu cuenta está inactiva y no puede realizar esta acción");
       return;
     }
 
@@ -53,7 +53,7 @@ function CreateProductPage() {
       <h2>Crear producto</h2>
       {!userActivo && (
         <p className="message-error">
-          Tu cuenta esta inactiva. Un administrador debe activarla antes de que
+          Tu cuenta está inactiva. Un administrador debe activarla antes de que
           puedas publicar productos.
         </p>
       )}
@@ -71,7 +71,7 @@ function CreateProductPage() {
         </div>
 
         <div>
-          <label htmlFor="descripcion">Descripcion</label>
+          <label htmlFor="descripcion">Descripción</label>
           <textarea
             disabled={!userActivo}
             id="descripcion"

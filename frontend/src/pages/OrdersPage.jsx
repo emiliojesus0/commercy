@@ -50,8 +50,8 @@ function OrdersPage() {
             <article key={pedido.id}>
               <h3>Pedido #{pedido.id}</h3>
               <p>Cliente: {pedido.cliente_nombre}</p>
-              <p>Telefono: {pedido.cliente_telefono}</p>
-              <p>Direccion: {pedido.direccion}</p>
+              <p>Teléfono: {pedido.cliente_telefono}</p>
+              <p>Dirección: {pedido.direccion}</p>
               <p>Estado: {pedido.estado}</p>
               <p>Total: ${pedido.total}</p>
               <Link to={`/orders/${pedido.id}`}>Ver detalle</Link>

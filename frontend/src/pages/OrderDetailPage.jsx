@@ -81,8 +81,8 @@ function OrderDetailPage() {
           <h3>Pedido #{pedido.id}</h3>
           <p>Cliente: {pedido.cliente_nombre}</p>
           <p>Email: {pedido.cliente_email || "No especificado"}</p>
-          <p>Telefono: {pedido.cliente_telefono}</p>
-          <p>Direccion: {pedido.direccion}</p>
+          <p>Teléfono: {pedido.cliente_telefono}</p>
+          <p>Dirección: {pedido.direccion}</p>
           <p>Notas: {pedido.notas || "Sin notas"}</p>
           <p>Estado: {pedido.estado}</p>
           <p>Total: ${pedido.total}</p>

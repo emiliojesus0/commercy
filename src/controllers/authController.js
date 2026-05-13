@@ -23,7 +23,7 @@ exports.login = (req, res) => {
   db.query(sql, [email], async (err, result) => {
     if (err) {
       return res.status(500).json({
-        message: "Error al iniciar sesion",
+        message: "Error al iniciar sesión",
       });
     }
 
@@ -56,7 +56,7 @@ exports.login = (req, res) => {
     );
 
     res.json({
-      message: "Login exitoso",
+      message: "Inicio de sesión exitoso",
       token,
     });
   });

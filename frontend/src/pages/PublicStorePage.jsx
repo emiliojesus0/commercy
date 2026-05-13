@@ -77,7 +77,7 @@ function PublicStorePage() {
         <h3>Productos</h3>
 
         {filteredProducts.length === 0 ? (
-          <p>No se encontraron productos para esta busqueda.</p>
+          <p>No se encontraron productos para esta búsqueda.</p>
         ) : (
           <div className="products-grid">
             {filteredProducts.map((product) => {
@@ -98,7 +98,7 @@ function PublicStorePage() {
                   )}
 
                   <h4>{product.titulo}</h4>
-                  <p>{product.descripcion || "Sin descripcion"}</p>
+                  <p>{product.descripcion || "Sin descripción"}</p>
                   <p>
                     <strong>${product.precio}</strong>
                   </p>

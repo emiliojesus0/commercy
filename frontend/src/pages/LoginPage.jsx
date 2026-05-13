@@ -25,7 +25,8 @@ function LoginPage() {
       localStorage.setItem("userRole", payload.rol);
       localStorage.setItem("userActivo", payload.activo);
 
-      setMensaje("Login exitoso");
+      setMensaje("Inicio de sesión exitoso");
+
       setEmail("");
       setPassword("");
       navigate("/dashboard");
@@ -36,7 +37,11 @@ function LoginPage() {
 
   return (
     <section>
-      <h2>Login</h2>
+      <h2>Acceso de vendedores</h2>
+      <p>
+        Esta sección es para vendedores y administradores que gestionan tiendas,
+        productos y pedidos.
+      </p>
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -59,7 +64,7 @@ function LoginPage() {
           />
         </div>
 
-        <button type="submit">Ingresar</button>
+        <button type="submit">Ingresar al panel</button>
       </form>
 
       {mensaje && <p className="message-success">{mensaje}</p>}

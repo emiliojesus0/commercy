@@ -17,13 +17,13 @@ exports.createProduct = (req, res) => {
 
   if (Number.isNaN(precio) || precio <= 0) {
     return res.status(400).json({
-      message: "El precio debe ser un numero mayor a 0",
+      message: "El precio debe ser un número mayor a 0",
     });
   }
 
   if (Number.isNaN(stock) || stock < 0 || !Number.isInteger(stock)) {
     return res.status(400).json({
-      message: "El stock debe ser un numero entero igual o mayor a 0",
+      message: "El stock debe ser un número entero igual o mayor a 0",
     });
   }
 

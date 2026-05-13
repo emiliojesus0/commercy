@@ -170,7 +170,7 @@ function CartPage() {
             </div>
 
             <div>
-              <label htmlFor="clienteTelefono">Telefono</label>
+              <label htmlFor="clienteTelefono">Teléfono</label>
               <input
                 id="clienteTelefono"
                 type="text"
@@ -180,7 +180,7 @@ function CartPage() {
             </div>
 
             <div>
-              <label htmlFor="direccion">Direccion</label>
+              <label htmlFor="direccion">Dirección</label>
               <textarea
                 id="direccion"
                 value={direccion}

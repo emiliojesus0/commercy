@@ -39,7 +39,12 @@ function RegisterPage() {
 
   return (
     <section>
-      <h2>Registro</h2>
+      <h2>Registro de vendedores</h2>
+      <p>
+        Crea tu cuenta para administrar tu tienda, publicar productos y
+        gestionar pedidos. Tu cuenta quedará pendiente de activación por un
+        administrador.
+      </p>
 
       <form onSubmit={handleSubmit}>
         <div>
@@ -72,7 +77,7 @@ function RegisterPage() {
           />
         </div>
 
-        <button type="submit">Registrarme</button>
+        <button type="submit">Crear cuenta de vendedor</button>
       </form>
 
       {mensaje && <p className="message-success">{mensaje}</p>}

@@ -14,7 +14,7 @@ exports.verifyToken = (req, res, next) => {
 
   if (parts.length !== 2 || parts[0] !== "Bearer") {
     return res.status(401).json({
-      message: "Formato de token invalido",
+      message: "Formato de token inválido",
     });
   }
 
@@ -23,7 +23,7 @@ exports.verifyToken = (req, res, next) => {
   jwt.verify(token, env.jwtSecret, (err, decoded) => {
     if (err) {
       return res.status(401).json({
-        message: "Token invalido",
+        message: "Token inválido",
       });
     }
 

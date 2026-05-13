@@ -28,7 +28,7 @@ export async function loginUser(userData) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Error al iniciar sesion");
+    throw new Error(data.message || "Error al iniciar sesión");
   }
 
   return data;

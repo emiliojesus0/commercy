@@ -6,7 +6,7 @@ exports.createStore = (req, res) => {
   const descripcion = req.body.descripcion?.trim() || "";
   if (!req.userActivo) {
     return res.status(403).json({
-      message: "Tu cuenta aun no ha sido activada por un administrador",
+      message: "Tu cuenta aún no ha sido activada por un administrador",
     });
   }
 
