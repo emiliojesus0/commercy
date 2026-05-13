@@ -18,7 +18,10 @@ function AccountPage() {
   const [storeForm, setStoreForm] = useState({
     nombre: "",
     descripcion: "",
+    color_fondo: "#f8fafc",
   });
+  const [storeLogoPreview, setStoreLogoPreview] = useState("");
+  const [storeLogoFile, setStoreLogoFile] = useState(null);
   const [hasStore, setHasStore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -38,7 +41,9 @@ function AccountPage() {
           setStoreForm({
             nombre: store.nombre || "",
             descripcion: store.descripcion || "",
+            color_fondo: store.color_fondo || "#f8fafc",
           });
+          setStoreLogoPreview(store.logo || "");
           setHasStore(true);
         } catch {
           setHasStore(false);
@@ -89,8 +94,17 @@ function AccountPage() {
     setError("");
 
     try {
-      const data = await updateMyStore(storeForm);
+      const data = await updateMyStore({
+        ...storeForm,
+        logo: storeLogoFile,
+      });
       setMessage(`Tienda actualizada correctamente. Nuevo slug: ${data.slug}`);
+
+      if (storeLogoFile) {
+        const refreshedStore = await getMyStore();
+        setStoreLogoPreview(refreshedStore.logo || "");
+        setStoreLogoFile(null);
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -178,7 +192,7 @@ function AccountPage() {
 
       {hasStore ? (
         <form onSubmit={handleStoreSubmit}>
-          <h3>Datos de la tienda</h3>
+          <h3>Diseño y datos de la tienda</h3>
 
           <div>
             <label htmlFor="store-nombre">Nombre de la tienda</label>
@@ -209,6 +223,42 @@ function AccountPage() {
               }
             />
           </div>
+
+          <div>
+            <label htmlFor="store-color">Color de fondo</label>
+            <input
+              id="store-color"
+              type="color"
+              value={storeForm.color_fondo}
+              onChange={(e) =>
+                setStoreForm((prev) => ({
+                  ...prev,
+                  color_fondo: e.target.value,
+                }))
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="store-logo">Logo de la tienda</label>
+            <input
+              id="store-logo"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setStoreLogoFile(e.target.files[0] || null)}
+            />
+          </div>
+
+          {storeLogoPreview && (
+            <div>
+              <p>Logo actual</p>
+              <img
+                src={storeLogoPreview}
+                alt="Logo de la tienda"
+                className="store-logo-preview"
+              />
+            </div>
+          )}
 
           <button type="submit">Guardar tienda</button>
         </form>

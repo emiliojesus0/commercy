@@ -1,9 +1,25 @@
 const storeModel = require("../models/storeModel");
 const slugify = require("slugify");
 
+const DEFAULT_STORE_COLOR = "#f8fafc";
+
+const sanitizeStoreColor = (value) => {
+  const color = value?.trim();
+
+  if (!color) {
+    return DEFAULT_STORE_COLOR;
+  }
+
+  const isHexColor = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(color);
+
+  return isHexColor ? color : null;
+};
+
 exports.createStore = (req, res) => {
   const nombre = req.body.nombre?.trim();
   const descripcion = req.body.descripcion?.trim() || "";
+  const color_fondo = sanitizeStoreColor(req.body.color_fondo);
+  const logo = req.file ? req.file.path : null;
 
   if (!req.userActivo) {
     return res.status(403).json({
@@ -14,6 +30,12 @@ exports.createStore = (req, res) => {
   if (!nombre) {
     return res.status(400).json({
       message: "El nombre de la tienda es obligatorio",
+    });
+  }
+
+  if (!color_fondo) {
+    return res.status(400).json({
+      message: "El color de fondo no es válido",
     });
   }
 
@@ -52,6 +74,8 @@ exports.createStore = (req, res) => {
         nombre,
         slug,
         descripcion,
+        color_fondo,
+        logo,
         usuario_id: req.userId,
       };
 
@@ -112,10 +136,17 @@ exports.getMyStore = (req, res) => {
 exports.updateMyStore = (req, res) => {
   const nombre = req.body.nombre?.trim();
   const descripcion = req.body.descripcion?.trim() || "";
+  const color_fondo = sanitizeStoreColor(req.body.color_fondo);
 
   if (!nombre) {
     return res.status(400).json({
       message: "El nombre de la tienda es obligatorio",
+    });
+  }
+
+  if (!color_fondo) {
+    return res.status(400).json({
+      message: "El color de fondo no es válido",
     });
   }
 
@@ -137,6 +168,7 @@ exports.updateMyStore = (req, res) => {
       lower: true,
       strict: true,
     });
+    const logo = req.file ? req.file.path : store.logo;
 
     storeModel.getStoreBySlugExactExcludingId(slug, store.id, (slugErr, rows) => {
       if (slugErr) {
@@ -157,6 +189,8 @@ exports.updateMyStore = (req, res) => {
           nombre,
           slug,
           descripcion,
+          color_fondo,
+          logo,
           usuario_id: req.userId,
         },
         (updateErr) => {

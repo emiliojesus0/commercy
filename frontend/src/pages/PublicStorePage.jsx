@@ -7,15 +7,12 @@ import { useCart } from "../context/CartContext";
 function PublicStorePage() {
   const { slug } = useParams();
   const { addToCart } = useCart();
-
   const [cartFeedback, setCartFeedback] = useState({
     productId: null,
     type: "",
     message: "",
   });
-
   const [searchTerm, setSearchTerm] = useState("");
-
   const [store, setStore] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,6 +43,7 @@ function PublicStorePage() {
   if (error) {
     return <p>{error}</p>;
   }
+
   const filteredProducts = products.filter((product) => {
     const titulo = product.titulo?.toLowerCase() || "";
     const descripcion = product.descripcion?.toLowerCase() || "";
@@ -55,20 +53,32 @@ function PublicStorePage() {
   });
 
   return (
-    <section>
+    <section className="store-page">
       {store && (
-        <header>
-          <h2>{store.nombre}</h2>
-          <p>{store.descripcion}</p>
-          <div className="search-box">
-            <label htmlFor="search">Buscar productos</label>
-            <input
-              id="search"
-              type="text"
-              placeholder="Ej. cuaderno, taza, collar..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+        <header
+          className="store-hero"
+          style={{ backgroundColor: store.color_fondo || "#f8fafc" }}
+        >
+          {store.logo && (
+            <img
+              src={store.logo}
+              alt={`Logo de ${store.nombre}`}
+              className="store-hero-logo"
             />
+          )}
+          <div className="store-hero-content">
+            <h2>{store.nombre}</h2>
+            <p>{store.descripcion || "Sin descripción"}</p>
+            <div className="search-box">
+              <label htmlFor="search">Buscar productos</label>
+              <input
+                id="search"
+                type="text"
+                placeholder="Ej. cuaderno, taza, collar..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
         </header>
       )}
@@ -105,16 +115,16 @@ function PublicStorePage() {
                   <button
                     type="button"
                     onClick={() => {
-                      const error = addToCart({
+                      const errorMessage = addToCart({
                         ...product,
                         storeSlug: slug,
                       });
 
-                      if (error) {
+                      if (errorMessage) {
                         setCartFeedback({
                           productId: product.id,
                           type: "error",
-                          message: error,
+                          message: errorMessage,
                         });
                       } else {
                         setCartFeedback({

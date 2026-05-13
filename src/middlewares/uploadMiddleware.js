@@ -4,10 +4,15 @@ const cloudinary = require("../config/cloudinary");
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: async (req, file) => ({
-    folder: "commercy/products",
-    allowed_formats: ["jpg", "jpeg", "png", "webp"],
-  }),
+  params: async (req, file) => {
+    const folder =
+      file.fieldname === "logo" ? "commercy/stores" : "commercy/products";
+
+    return {
+      folder,
+      allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    };
+  },
 });
 
 const fileFilter = (req, file, cb) => {

@@ -2,13 +2,20 @@ const db = require("../config/db");
 
 exports.createStore = (store, callback) => {
   const sql = `
-  INSERT INTO tiendas (nombre, slug, descripcion, usuario_id)
-  VALUES (?, ?, ?, ?)
+  INSERT INTO tiendas (nombre, slug, descripcion, color_fondo, logo, usuario_id)
+  VALUES (?, ?, ?, ?, ?, ?)
   `;
 
   db.query(
     sql,
-    [store.nombre, store.slug, store.descripcion, store.usuario_id],
+    [
+      store.nombre,
+      store.slug,
+      store.descripcion,
+      store.color_fondo,
+      store.logo,
+      store.usuario_id,
+    ],
     callback,
   );
 };
@@ -45,13 +52,21 @@ exports.getStoreBySlugExactExcludingId = (slug, storeId, callback) => {
 exports.updateStore = (store, callback) => {
   const sql = `
     UPDATE tiendas
-    SET nombre = ?, slug = ?, descripcion = ?
+    SET nombre = ?, slug = ?, descripcion = ?, color_fondo = ?, logo = ?
     WHERE id = ? AND usuario_id = ?
   `;
 
   db.query(
     sql,
-    [store.nombre, store.slug, store.descripcion, store.id, store.usuario_id],
+    [
+      store.nombre,
+      store.slug,
+      store.descripcion,
+      store.color_fondo,
+      store.logo,
+      store.id,
+      store.usuario_id,
+    ],
     callback,
   );
 };

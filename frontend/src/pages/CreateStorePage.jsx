@@ -5,6 +5,8 @@ import { getUserActivo } from "../services/authService";
 function CreateStorePage() {
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [colorFondo, setColorFondo] = useState("#f8fafc");
+  const [logo, setLogo] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
   const userActivo = getUserActivo() === "1";
@@ -24,11 +26,15 @@ function CreateStorePage() {
       const data = await createStore({
         nombre,
         descripcion,
+        color_fondo: colorFondo,
+        logo,
       });
 
       setMensaje(`Tienda creada correctamente. Slug: ${data.slug}`);
       setNombre("");
       setDescripcion("");
+      setColorFondo("#f8fafc");
+      setLogo(null);
     } catch (err) {
       setError(err.message);
     }
@@ -65,6 +71,28 @@ function CreateStorePage() {
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
             rows="4"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="colorFondo">Color de fondo de la tienda</label>
+          <input
+            disabled={!userActivo}
+            id="colorFondo"
+            type="color"
+            value={colorFondo}
+            onChange={(e) => setColorFondo(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="logo">Logo de la tienda</label>
+          <input
+            disabled={!userActivo}
+            id="logo"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setLogo(e.target.files[0] || null)}
           />
         </div>
 

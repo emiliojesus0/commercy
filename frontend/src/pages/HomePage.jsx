@@ -4,7 +4,7 @@ function HomePage() {
   return (
     <section>
       <h1>Commercy</h1>
-      <p>Marketplace para pequeños emprendedores.</p>
+      <p>Marketplace para emprendedores.</p>
       <p>
         Los clientes pueden recorrer tiendas, descubrir productos y realizar
         pedidos desde una experiencia simple.
