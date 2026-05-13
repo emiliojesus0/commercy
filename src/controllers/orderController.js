@@ -1,5 +1,6 @@
 const storeModel = require("../models/storeModel");
 const orderModel = require("../models/orderModel");
+const productModel = require("../models/productModel");
 
 exports.createOrder = (req, res) => {
   const slug = req.params.slug;
@@ -40,119 +41,175 @@ exports.createOrder = (req, res) => {
     const productosValidados = [];
     let total = 0;
 
-    const procesarProducto = (index) => {
-      if (index >= productos.length) {
-        const newOrder = {
-          tienda_id: tienda.id,
-          cliente_nombre,
-          cliente_email,
-          cliente_telefono,
-          direccion,
-          notas,
-          estado: "pendiente",
-          total,
-        };
+    orderModel.beginTransaction((transactionErr, connection) => {
+      if (transactionErr) {
+        return res.status(500).json({
+          message: "Error al iniciar la transaccion del pedido",
+        });
+      }
 
-        return orderModel.createOrder(newOrder, (err, orderResult) => {
-          if (err) {
-            return res.status(500).json({
-              message: "Error al crear el pedido",
-            });
-          }
+      const rollbackWithError = (statusCode, message) => {
+        orderModel.rollbackTransaction(connection, () => {
+          return res.status(statusCode).json({ message });
+        });
+      };
 
-          const pedido_id = orderResult.insertId;
-          let detallesGuardados = 0;
+      const procesarProducto = (index) => {
+        if (index >= productos.length) {
+          const newOrder = {
+            tienda_id: tienda.id,
+            cliente_nombre,
+            cliente_email,
+            cliente_telefono,
+            direccion,
+            notas,
+            estado: "pendiente",
+            total,
+          };
 
-          for (const producto of productosValidados) {
-            const detail = {
-              pedido_id,
-              producto_id: producto.producto_id,
-              cantidad: producto.cantidad,
-              precio_unitario: producto.precio_unitario,
-              subtotal: producto.subtotal,
-            };
-
-            orderModel.createOrderDetail(detail, (err) => {
-              if (err) {
-                return res.status(500).json({
-                  message: "Error al guardar el detalle del pedido",
-                });
+          return orderModel.createOrderWithConnection(
+            connection,
+            newOrder,
+            (orderErr, orderResult) => {
+              if (orderErr) {
+                return rollbackWithError(500, "Error al crear el pedido");
               }
 
-              detallesGuardados += 1;
+              const pedido_id = orderResult.insertId;
+              let detallesGuardados = 0;
 
-              if (detallesGuardados === productosValidados.length) {
-                return res.status(201).json({
-                  message: "Pedido creado correctamente",
-                  pedido: {
-                    id: pedido_id,
-                    tienda_id: tienda.id,
-                    cliente_nombre,
-                    cliente_email,
-                    cliente_telefono,
-                    direccion,
-                    notas,
-                    estado: "pendiente",
-                    total,
-                    productos: productosValidados,
+              for (const producto of productosValidados) {
+                const detail = {
+                  pedido_id,
+                  producto_id: producto.producto_id,
+                  cantidad: producto.cantidad,
+                  precio_unitario: producto.precio_unitario,
+                  subtotal: producto.subtotal,
+                };
+
+                orderModel.createOrderDetailWithConnection(
+                  connection,
+                  detail,
+                  (detailErr) => {
+                    if (detailErr) {
+                      return rollbackWithError(
+                        500,
+                        "Error al guardar el detalle del pedido",
+                      );
+                    }
+
+                    detallesGuardados += 1;
+
+                    if (detallesGuardados === productosValidados.length) {
+                      return orderModel.commitTransaction(
+                        connection,
+                        (commitErr) => {
+                          if (commitErr) {
+                            return res.status(500).json({
+                              message: "Error al confirmar el pedido",
+                            });
+                          }
+
+                          return res.status(201).json({
+                            message: "Pedido creado correctamente",
+                            pedido: {
+                              id: pedido_id,
+                              tienda_id: tienda.id,
+                              cliente_nombre,
+                              cliente_email,
+                              cliente_telefono,
+                              direccion,
+                              notas,
+                              estado: "pendiente",
+                              total,
+                              productos: productosValidados,
+                            },
+                          });
+                        },
+                      );
+                    }
                   },
-                });
+                );
               }
-            });
-          }
-        });
-      }
+            },
+          );
+        }
 
-      const item = productos[index];
-      const producto_id = Number(item.producto_id);
-      const cantidad = Number(item.cantidad);
+        const item = productos[index];
+        const producto_id = Number(item.producto_id);
+        const cantidad = Number(item.cantidad);
 
-      if (
-        Number.isNaN(producto_id) ||
-        Number.isNaN(cantidad) ||
-        cantidad <= 0 ||
-        !Number.isInteger(cantidad)
-      ) {
-        return res.status(400).json({
-          message: "Los productos enviados no son validos",
-        });
-      }
+        if (
+          Number.isNaN(producto_id) ||
+          Number.isNaN(cantidad) ||
+          cantidad <= 0 ||
+          !Number.isInteger(cantidad)
+        ) {
+          return rollbackWithError(
+            400,
+            "Los productos enviados no son validos",
+          );
+        }
 
-      orderModel.getProductByIdAndStore(
-        producto_id,
-        tienda.id,
-        (err, productResult) => {
-          if (err) {
-            return res.status(500).json({
-              message: "Error al validar los productos",
-            });
-          }
+        orderModel.getProductByIdAndStoreWithConnection(
+          connection,
+          producto_id,
+          tienda.id,
+          (productErr, productResult) => {
+            if (productErr) {
+              return rollbackWithError(500, "Error al validar los productos");
+            }
 
-          if (productResult.length === 0) {
-            return res.status(400).json({
-              message: `El producto con id ${producto_id} no existe en esta tienda`,
-            });
-          }
+            if (productResult.length === 0) {
+              return rollbackWithError(
+                400,
+                `El producto con id ${producto_id} no existe en esta tienda`,
+              );
+            }
 
-          const producto = productResult[0];
-          const subtotal = Number(producto.precio) * cantidad;
+            const producto = productResult[0];
 
-          productosValidados.push({
-            producto_id: producto.id,
-            titulo: producto.titulo,
-            cantidad,
-            precio_unitario: Number(producto.precio),
-            subtotal,
-          });
+            if (cantidad > producto.stock) {
+              return rollbackWithError(
+                400,
+                `Stock insuficiente para el producto ${producto.titulo}`,
+              );
+            }
 
-          total += subtotal;
+            const subtotal = Number(producto.precio) * cantidad;
+            const nuevoStock = producto.stock - cantidad;
 
-          procesarProducto(index + 1);
-        },
-      );
-    };
+            orderModel.updateProductStockWithConnection(
+              connection,
+              producto.id,
+              nuevoStock,
+              (stockErr) => {
+                if (stockErr) {
+                  return rollbackWithError(
+                    500,
+                    "Error al actualizar el stock del producto",
+                  );
+                }
 
-    procesarProducto(0);
+                productosValidados.push({
+                  producto_id: producto.id,
+                  titulo: producto.titulo,
+                  cantidad,
+                  precio_unitario: Number(producto.precio),
+                  subtotal,
+                });
+
+                total += subtotal;
+
+                procesarProducto(index + 1);
+              },
+            );
+          },
+        );
+      };
+
+      procesarProducto(0);
+    });
   });
 };
 

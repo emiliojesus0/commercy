@@ -91,7 +91,7 @@ function CartPage() {
           <div className="cart-list">
             {cartItems.map((item) => {
               const imageUrl = item.imagen
-                ? `http://localhost:3000/uploads/products/${item.imagen}`
+                ? `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/products/${item.imagen}`
                 : null;
 
               return (

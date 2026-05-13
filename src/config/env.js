@@ -2,7 +2,13 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const requiredEnvVars = ["DB_HOST", "DB_USER", "DB_NAME", "JWT_SECRET"];
+const requiredEnvVars = [
+  "DB_HOST",
+  "DB_USER",
+  "DB_NAME",
+  "JWT_SECRET",
+  "FRONTEND_URL",
+];
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
@@ -18,4 +24,5 @@ module.exports = {
   dbName: process.env.DB_NAME,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "1h",
+  frontendUrl: process.env.FRONTEND_URL,
 };

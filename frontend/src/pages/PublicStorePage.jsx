@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getStoreBySlug } from "../services/storeService";
 import { getStoreProducts } from "../services/productService";
-import { createOrder } from "../services/orderService";
 import { useCart } from "../context/CartContext";
 
 function PublicStorePage() {
@@ -83,7 +82,7 @@ function PublicStorePage() {
           <div className="products-grid">
             {filteredProducts.map((product) => {
               const imageUrl = product.imagen
-                ? `http://localhost:3000/uploads/products/${product.imagen}`
+                ? `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/products/${product.imagen}`
                 : null;
 
               return (

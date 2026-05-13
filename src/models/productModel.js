@@ -34,3 +34,23 @@ exports.getProductsByStore = (slug, callback) => {
 
   db.query(query, [slug], callback);
 };
+
+exports.getProductByIdAndStore = (productoId, tiendaId, callback) => {
+  const query = `
+    SELECT *
+    FROM productos
+    WHERE id = ? AND tienda_id = ?
+  `;
+
+  db.query(query, [productoId, tiendaId], callback);
+};
+
+exports.updateProductStock = (productoId, nuevoStock, callback) => {
+  const query = `
+    UPDATE productos
+    SET stock = ?
+    WHERE id = ?
+  `;
+
+  db.query(query, [nuevoStock, productoId], callback);
+};

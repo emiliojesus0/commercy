@@ -33,16 +33,13 @@ export async function getMyStoreOrderDetail(orderId) {
 }
 
 export async function createOrder(slug, orderData) {
-  const response = await fetch(
-    `http://localhost:3000/api/stores/${slug}/orders`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(orderData),
+  const response = await fetch(`${API_URL}/stores/${slug}/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify(orderData),
+  });
 
   const data = await response.json();
 

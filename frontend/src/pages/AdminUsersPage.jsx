@@ -23,7 +23,11 @@ function AdminUsersPage() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    const loadUsers = async () => {
+      await fetchUsers();
+    };
+
+    loadUsers();
   }, []);
 
   const handleActivate = async (userId) => {

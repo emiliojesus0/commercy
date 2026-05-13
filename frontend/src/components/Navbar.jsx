@@ -33,7 +33,7 @@ function Navbar() {
       try {
         const store = await getMyStore();
         setStoreName(store.nombre);
-      } catch (error) {
+      } catch {
         setStoreName("");
       }
     };
