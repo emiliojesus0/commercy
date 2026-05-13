@@ -90,9 +90,7 @@ function CartPage() {
         <>
           <div className="cart-list">
             {cartItems.map((item) => {
-              const imageUrl = item.imagen
-                ? `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/products/${item.imagen}`
-                : null;
+              const imageUrl = item.imagen || null;
 
               return (
                 <article key={item.id} className="cart-item">

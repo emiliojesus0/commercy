@@ -27,7 +27,7 @@ exports.createProduct = (req, res) => {
     });
   }
 
-  const imagen = req.file ? req.file.filename : null;
+  const imagen = req.file ? req.file.path : null;
 
   const sql = "SELECT id FROM tiendas WHERE usuario_id = ?";
 

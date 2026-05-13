@@ -81,9 +81,7 @@ function PublicStorePage() {
         ) : (
           <div className="products-grid">
             {filteredProducts.map((product) => {
-              const imageUrl = product.imagen
-                ? `${import.meta.env.VITE_API_URL.replace("/api", "")}/uploads/products/${product.imagen}`
-                : null;
+              const imageUrl = product.imagen || null;
 
               return (
                 <article key={product.id} className="product-card">
